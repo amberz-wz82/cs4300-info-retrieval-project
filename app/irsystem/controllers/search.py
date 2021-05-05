@@ -199,12 +199,21 @@ def query_expansion(query_arr):
     return expanded_query
 
 
-def rank_score(wholesome_weight):
+def rank_score(wholesome_weight, sim_scores):
     '''
-    Calculate a rank score affected by user's mood,
+    Calculate a rank score affected by user's mood with
+    the formula:
+    x * ((like count normalized + potentially positivity)/2) 
+    + (1-x) *(similarity score)
     altering the order of quotes.
     '''
-    pass
+    df = load_quotes()
+    ranked = []
+    for x in range(len(df.index)):
+        score = wholesome_weight * df.iloc[x, 4]  #normalized likes here
+        score += (1 - wholesome_weight) * sim_scores[x]
+        ranked.append(score)
+    return ranked
 
 
 # def get_sentiment(df):
@@ -216,7 +225,7 @@ def rank_score(wholesome_weight):
 #     return df
 
 
-def get_lsi_sim(query, tags=[]):  #, wholesome_weight):
+def get_lsi_sim(query, wholesome_weight, tags=[]):  #, wholesome_weight):
     stop_words = set(stopwords.words('english'))
     index = similarities.MatrixSimilarity.load(
         '../../../quotes_likes/quotes.index')
@@ -232,6 +241,8 @@ def get_lsi_sim(query, tags=[]):  #, wholesome_weight):
     del lsi
     del stop_words
     sim_df = pd.DataFrame(sims, columns=['similarity'])
+    sim_df['rank_score'] = rank_score(wholesome_weight,
+                                      sim_df['similarity'].to_numpy())
 
     if tags:
         #sims = [[i,sim] for i, sim in enumerate(sims)]
@@ -245,7 +256,7 @@ def get_lsi_sim(query, tags=[]):  #, wholesome_weight):
                           how='inner')
         df = load_quotes()
         df = pd.merge(df, sim_df, left_index=True, right_on='DocIdx')
-        df = df.sort_values(['similarity'], ascending=False).head(
+        df = df.sort_values(['rank_score'], ascending=False).head(
             10)  # TODO: sort by rank score
 
     else:
@@ -256,7 +267,7 @@ def get_lsi_sim(query, tags=[]):  #, wholesome_weight):
                       right_index=True,
                       how='inner')
         del sims
-        df = df.sort_values(['similarity'], ascending=False).head(
+        df = df.sort_values(['rank_score'], ascending=False).head(
             10)  # TODO: sort by rank score
 
     # filter by tags if needed
@@ -266,7 +277,7 @@ def get_lsi_sim(query, tags=[]):  #, wholesome_weight):
 if __name__ == '__main__':
     print(
         json.dumps(json.JSONDecoder().decode(
-            get_lsi_sim("My friends and I are growing apart")),
+            get_lsi_sim("My friends and I are growing apart", 0.2)),
                    indent=4))
     #print(json.dumps(json.JSONDecoder().decode(get_lsi_sim("My friends and I are growing apart", tags=['friendship', 'friends'])), indent=4))
     #print(json.dumps(json.JSONDecoder().decode(get_lsi_sim("I wish school was easier")), indent=4))
