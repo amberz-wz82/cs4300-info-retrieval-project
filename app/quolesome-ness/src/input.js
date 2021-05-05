@@ -14,16 +14,10 @@ function Input(props) {
 
   return (
     <Container className="input">
-      <Form>
-        <Row className="tags">
-          <Col>
-            <TagSelect selected={selected} setSelected={setSelected} />
-          </Col>
-        </Row>
+      <Form className="input-container">
 
-        <Row className="feeling-moodbar">
-          <Row className="feeling-moodbar">
-            <Col className="feeling">
+          <Row className="feeling">
+            <Col>
               <Form.Group controlId="feelingDescription">
                 <Form.Label className="text">What's on your mind?</Form.Label>
                 <Form.Control
@@ -41,20 +35,28 @@ function Input(props) {
                 </Form.Text>
               </Form.Group>
             </Col>
+          </Row>
 
-            <Col className="moodbar">
+          <Row className="tags">
+            <Col>
+              <TagSelect selected={selected} setSelected={setSelected} />
+            </Col>
+          </Row>
+
+          <Row className="moodbar">
+            <Col>
               <Form.Group controlId="moodRange">
-                <Form.Label className="text">
-                  {"Indicate your emotional state:" + emoji}
-                </Form.Label>
+                <p className="text">
+                  {"Indicate your emotional state: " + emoji}
+                </p>
               </Form.Group>
-              <Row>
+              <Row className="emoji-row">
                 <Col>
                   <p
                     className="emoji"
                     onClick={() => {
                       setEmoji("😐");
-                      setWholesome(0.2);
+                      setWholesome(0.1);
                     }}
                   >
                     😐
@@ -64,8 +66,19 @@ function Input(props) {
                   <p
                     className="emoji"
                     onClick={() => {
+                      setEmoji("🙁");
+                      setWholesome(0.3);
+                    }}
+                  >
+                    🙁
+                  </p>
+                </Col>
+                <Col>
+                  <p
+                    className="emoji"
+                    onClick={() => {
                       setEmoji("😢");
-                      setWholesome(0.4);
+                      setWholesome(0.5);
                     }}
                   >
                     😢
@@ -76,7 +89,7 @@ function Input(props) {
                     className="emoji"
                     onClick={() => {
                       setEmoji("😰");
-                      setWholesome(0.6);
+                      setWholesome(0.7);
                     }}
                   >
                     😰
@@ -87,7 +100,7 @@ function Input(props) {
                     className="emoji"
                     onClick={() => {
                       setEmoji("😭");
-                      setWholesome(0.8);
+                      setWholesome(0.9);
                     }}
                   >
                     😭
@@ -96,7 +109,6 @@ function Input(props) {
               </Row>
             </Col>
           </Row>
-        </Row>
 
         <Row>
           <Col>
@@ -104,6 +116,7 @@ function Input(props) {
               variant="info"
               className="button"
               name="submit"
+              disabled={text.length<1}
               onClick={(e) =>
                 props.handleSubmit({
                   text: text,

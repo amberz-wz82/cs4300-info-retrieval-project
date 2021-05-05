@@ -63,7 +63,7 @@ function App() {
 
       <div className="header">
         <h1>QUOLESOME-NESS</h1>
-        <Logo />
+        <a href="/"><Logo /></a>
         <p>Feeling down? Let's find you some wholesome quotes!</p>
       </div>
       {isOutput ? (
