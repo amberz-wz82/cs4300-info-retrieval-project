@@ -13,5 +13,5 @@ cs4300-env/
 __pycache__/
 */__pycache__
 app/quolesome-ness/node_modules
-./quotes_likes/quotes.model.projection.u.npy
-./quolesomeness/quotes_likes/quotes_likes_0-100K.csv
+quotes_likes/quotes.model.projection.u.npy
+quotes_likes/quotes_likes_0-100K.csv
