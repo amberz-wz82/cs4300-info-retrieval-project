@@ -16,7 +16,7 @@ nltk.download('stopwords')
 stop_words = nltk.corpus.stopwords.words("english")
 #stop_words = set(stopwords.words('english'))
 
-df = pd.read_csv('quotes_likes/quotes_likes_0-100K.csv', header=0)
+df = pd.read_csv('quotes_likes/new_quotes.csv', header=0)
 df = df.head(10000)
 
 # inverted index for tags
