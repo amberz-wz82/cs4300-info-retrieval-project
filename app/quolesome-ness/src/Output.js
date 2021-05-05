@@ -19,8 +19,9 @@ function Output(props) {
         author={data[i].author}
         categories={data[i].tags}
         likes={data[i].likes}
-        score={data[i].similarity}
+        similarity={data[i].similarity}
         sentiment={data[i].sentiment}
+        rank_score={data[i].rank_score}
         idx={data[i].DocIdx}
       />
     );

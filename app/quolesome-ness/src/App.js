@@ -40,6 +40,7 @@ function App() {
         likes: number, 
         similarity: number,
         sentiment: number,
+        rank_score: number
         DocIdx: number}]*/
         setOutput(true);
       });

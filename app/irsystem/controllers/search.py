@@ -21,7 +21,7 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 download('stopwords')
 # download('vader_lexicon')
-model_t = downloader.load('glove-twitter-25')
+# model_t = downloader.load('glove-twitter-25')
 
 
 def min_max_norm(max_l, min_l, count):
@@ -36,8 +36,8 @@ def load_quotes():
     Loads quotes data (4 columns: quote, author, tags, likes)
     '''
     dfs = []
-    for fname in os.listdir('../../../quotes_likes/'):
-        fpath = os.path.join('../../../quotes_likes', fname)
+    for fname in os.listdir('./quotes_likes/'):
+        fpath = os.path.join('./quotes_likes', fname)
         if not os.path.isfile(fpath) or not fname.startswith('new_'): continue
         dfs.append(pd.read_csv(fpath, header=0, encoding='utf-8'))
     df = pd.concat(dfs).reset_index(drop=True)
@@ -50,6 +50,7 @@ def load_quotes():
     df.assign(Normalized_likes=
     [min_max_norm(max_df, min_df, likes) for likes in df['likes']])
     '''
+    print(df)
     return df
 
 
@@ -185,18 +186,18 @@ def get_categories():
     return load_tags_idx().keys()
 
 
-def query_expansion(query_arr):
-    '''
-    Using Twitter Glove, generate two extra word embeddings 
-    for each important word in the free text input for 
-    query expansion.
-    '''
-    expanded_query = query_arr.copy()
-    for word in query_arr:
-        embeddings = model_t.most_similar(word)[0:2]
-        for e in embeddings:
-            expanded_query.append(e[0])
-    return expanded_query
+# def query_expansion(query_arr):
+#     '''
+#     Using Twitter Glove, generate two extra word embeddings 
+#     for each important word in the free text input for 
+#     query expansion.
+#     '''
+#     expanded_query = query_arr.copy()
+#     for word in query_arr:
+#         embeddings = model_t.most_similar(word)[0:2]
+#         for e in embeddings:
+#             expanded_query.append(e[0])
+#     return expanded_query
 
 
 def rank_score(wholesome_weight, sim_scores):
@@ -209,6 +210,7 @@ def rank_score(wholesome_weight, sim_scores):
     '''
     df = load_quotes()
     ranked = []
+    print(type(wholesome_weight))
     for x in range(len(df.index)):
         score = wholesome_weight * df.iloc[x, 4]  #normalized likes here
         score += (1 - wholesome_weight) * sim_scores[x]
@@ -228,13 +230,13 @@ def rank_score(wholesome_weight, sim_scores):
 def get_lsi_sim(query, wholesome_weight, tags=[]):  #, wholesome_weight):
     stop_words = set(stopwords.words('english'))
     index = similarities.MatrixSimilarity.load(
-        '../../../quotes_likes/quotes.index')
+        './quotes_likes/quotes.index')
     dictionary = corpora.dictionary.Dictionary.load(
-        '../../../quotes_likes/quotes.dict')
+        './quotes_likes/quotes.dict')
     doc = [word for word in query.lower().split() if word not in stop_words]
-    doc = query_expansion(doc)
+    # doc = query_expansion(doc)
     vec_bow = dictionary.doc2bow(doc)
-    lsi = models.LsiModel.load('../../../quotes_likes/quotes.model')
+    lsi = models.LsiModel.load('./quotes_likes/quotes.model')
     vec_lsi = lsi[vec_bow]  # convert the query to LSI space
     sims = index[vec_lsi]  # perform a similarity query against the corpus
     del dictionary
@@ -257,7 +259,7 @@ def get_lsi_sim(query, wholesome_weight, tags=[]):  #, wholesome_weight):
         df = load_quotes()
         df = pd.merge(df, sim_df, left_index=True, right_on='DocIdx')
         df = df.sort_values(['rank_score'], ascending=False).head(
-            10)  # TODO: sort by rank score
+            10)  
 
     else:
         df = load_quotes()
@@ -268,7 +270,7 @@ def get_lsi_sim(query, wholesome_weight, tags=[]):  #, wholesome_weight):
                       how='inner')
         del sims
         df = df.sort_values(['rank_score'], ascending=False).head(
-            10)  # TODO: sort by rank score
+            10) 
 
     # filter by tags if needed
     return df.to_json(orient="records")
@@ -277,7 +279,7 @@ def get_lsi_sim(query, wholesome_weight, tags=[]):  #, wholesome_weight):
 if __name__ == '__main__':
     print(
         json.dumps(json.JSONDecoder().decode(
-            get_lsi_sim("My friends and I are growing apart", 0.2)),
+            get_lsi_sim("My friends and I are growing apart", 0.2, tags=['love'],)),
                    indent=4))
     #print(json.dumps(json.JSONDecoder().decode(get_lsi_sim("My friends and I are growing apart", tags=['friendship', 'friends'])), indent=4))
     #print(json.dumps(json.JSONDecoder().decode(get_lsi_sim("I wish school was easier")), indent=4))

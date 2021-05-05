@@ -4,6 +4,7 @@ from nltk.corpus import stopwords
 import os
 import ssl
 import pandas as pd
+from ast import literal_eval
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
@@ -20,14 +21,15 @@ df = pd.read_csv('quotes_likes/new_quotes.csv', header=0)
 df = df.head(10000)
 
 # inverted index for tags
-df = df[['quote', 'author', 'tags', 'likes']]
-df['tags'] = df['tags'].str.split(',')
-df['tags'] = df['tags'].apply(lambda l: list(map(lambda element: element.strip(), l)    ) if type(l)==list else l)
+df = df[['quote', 'author', 'tags', 'likes', 'sentiment']]
+# df['tags'] = df['tags'].apply(literal_eval)
+df['tags'] = df['tags'].apply(lambda l: list(map(lambda element: element.strip(), l)) if type(l)==list else l)
 df = df[df['tags'].notnull()]
+# print(df['tags'])
 
 documents = df['quote'].tolist()
 df = df[df['tags'].notnull()]
-df['tags'] = df['tags'].str.split(',')
+# df['tags'] = df['tags'].apply(literal_eval)
 df['tags'] = df['tags'].apply(lambda l: list(map(lambda element: element.strip(), l)) if type(l)==list else l)
 texts = [
     [word for word in document.lower().split() if word not in stop_words]

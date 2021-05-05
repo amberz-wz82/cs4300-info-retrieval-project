@@ -119,15 +119,15 @@ export default function QuoteCard(props) {
                         , where x is determined by the input "emotional state".
                         For a more negative emotional state, we weigh the
                         wholesomeness (like counts from Goodreads and sentiment
-                        score) of the quotes more so the results are more
+                        score) of the quotes more so the results are more{" "}
                         <i>comforting</i>. Otherwise we weigh the similarity
-                        more so the results are more <i>relatable</i>.
+                        more so the results are more <i>relatable</i>.<br />
                       </Popover.Content>
                     </Popover>
                   }
                 >
                   <p style={{ "font-size": "12px", "margin-left": "0.2vh" }}>
-                    {"Score: " + props.score.toFixed(2)} {infoIcon}
+                    {"Score: " + props.rank_score.toFixed(2)} {infoIcon}
                   </p>
                 </OverlayTrigger>
               </Row>
