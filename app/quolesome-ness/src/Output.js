@@ -32,7 +32,7 @@ function Output(props) {
       </Row>
       <Row>
         <Button
-          variant="outline-info"
+          variant="outline-light"
           className="button"
           onClick={() => props.handleBack()}
         >
