@@ -210,7 +210,7 @@ def rank_score(wholesome_weight, sim_scores):
     '''
     df = load_quotes()
     ranked = []
-    print(type(wholesome_weight))
+
     for x in range(len(df.index)):
         score = wholesome_weight * df.iloc[x, 4]  #normalized likes here
         score += (1 - wholesome_weight) * sim_scores[x]
