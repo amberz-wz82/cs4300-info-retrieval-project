@@ -38,7 +38,8 @@ function App() {
         author: string, 
         tags: [string], 
         likes: number, 
-        Similarity: number,
+        similarity: number,
+        sentiment: number,
         DocIdx: number}]*/
         setOutput(true);
       });

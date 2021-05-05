@@ -111,10 +111,17 @@ export default function QuoteCard(props) {
                         How is the score calculated?
                       </Popover.Title>
                       <Popover.Content>
-                        <strong>As of prototype 2,</strong> the score is the
-                        similarity score of the free text input compared to the
-                        quotes, yielded by our Latent Semantic Indexing (LSI)
-                        model.
+                        We calculated the score using this formula:{" "}
+                        <strong>
+                          x * ((normalized_like_counts + sentiment_score)/2) +
+                          (1-x) * similarity_score_by_LSI_model
+                        </strong>
+                        , where x is determined by the input "emotional state".
+                        For a more negative emotional state, we weigh the
+                        wholesomeness (like counts from Goodreads and sentiment
+                        score) of the quotes more so the results are more
+                        <i>comforting</i>. Otherwise we weigh the similarity
+                        more so the results are more <i>relatable</i>.
                       </Popover.Content>
                     </Popover>
                   }

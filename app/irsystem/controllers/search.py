@@ -20,6 +20,7 @@ except AttributeError:
 else:
     ssl._create_default_https_context = _create_unverified_https_context
 download('stopwords')
+# download('vader_lexicon')
 model_t = downloader.load('glove-twitter-25')
 
 def min_max_norm(max_l, min_l, count):
@@ -35,11 +36,11 @@ def load_quotes():
     dfs = []
     for fname in os.listdir('./quotes_likes/'):
         fpath = os.path.join('./quotes_likes', fname)
-        if not os.path.isfile(fpath) or not fname.startswith('quotes_'): continue
+        if not os.path.isfile(fpath) or not fname.startswith('new_'): continue
         dfs.append(pd.read_csv(fpath, header=0, encoding='utf-8'))
     df = pd.concat(dfs).reset_index(drop=True)
-    df = df[['quote', 'author', 'tags', 'likes']]
-    df['tags'] = df['tags'].str.split(',')
+    df = df[['quote', 'author', 'tags', 'likes', 'sentiment']]
+    df['tags'] = df['tags'].apply(eval)
     df = df[df['tags'].notnull()]
     max_df = df['likes'].max()
     min_df = df['likes'].min()
@@ -192,6 +193,14 @@ def rank_score(wholesome_weight):
     '''
     pass 
 
+# def get_sentiment(df):
+#     '''
+#     Get compound [-1,1] sentiment score of quotes.
+#     '''
+#     sid = SentimentIntensityAnalyzer()
+#     df["sentiment"] = df.apply(lambda x: sid.polarity_scores(x.quote)["compound"], axis=1)
+#     return df
+
 def get_lsi_sim(query, tags=[]): #, wholesome_weight):
     stop_words = set(stopwords.words('english')) 
     index = similarities.MatrixSimilarity.load('quotes_likes/quotes.index')
@@ -205,7 +214,7 @@ def get_lsi_sim(query, tags=[]): #, wholesome_weight):
     del dictionary
     del lsi
     del stop_words
-    sim_df = pd.DataFrame(sims, columns=['Similarity'])
+    sim_df = pd.DataFrame(sims, columns=['similarity'])
 
     if tags:
         #sims = [[i,sim] for i, sim in enumerate(sims)]
@@ -215,12 +224,14 @@ def get_lsi_sim(query, tags=[]): #, wholesome_weight):
         sim_df = pd.merge(sim_df, tag_df, left_index=True, right_on='DocIdx', how='inner')
         df = load_quotes()
         df = pd.merge(df, sim_df, left_index=True, right_on='DocIdx')
-        df = df.sort_values(['Similarity'], ascending=False).head(10)
+        df = df.sort_values(['similarity'], ascending=False).head(10) # TODO: sort by rank score
+        
     else:
         df = load_quotes()
         df = pd.merge(sim_df, df, left_index=True, right_index=True, how='inner')
         del sims
-        df = df.sort_values(['Similarity'], ascending=False).head(10)
+        df = df.sort_values(['similarity'], ascending=False).head(10) # TODO: sort by rank score
+        
     # filter by tags if needed
     return df.to_json(orient = "records")
 

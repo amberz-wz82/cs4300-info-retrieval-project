@@ -19,7 +19,8 @@ function Output(props) {
         author={data[i].author}
         categories={data[i].tags}
         likes={data[i].likes}
-        score={data[i].Similarity}
+        score={data[i].similarity}
+        sentiment={data[i].sentiment}
         idx={data[i].DocIdx}
       />
     );
