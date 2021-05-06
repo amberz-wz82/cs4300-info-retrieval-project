@@ -1,5 +1,5 @@
 .App {
-  padding-top: 70px;
+  padding-top: 80px;
   text-align: center;
 }
 
@@ -95,9 +95,17 @@
 .version {
   position: absolute;
   top: 2%;
-  left: 2%;
+  left: 20px;
   z-index: 1;
 }
+
+.version2 {
+  position: absolute;
+  top: 2%;
+  left: 150px;
+  z-index: 1;
+}
+
 a {
   color: rgb(255, 255, 255) !important;
   text-decoration: none;
@@ -106,6 +114,14 @@ a {
 @media only screen and (max-width: 700px) {
   .App {
     padding-top: 90px;
+  }
+
+  .version {
+    left: 28%;
+  }
+
+  .version2 {
+    left: 52%
   }
 
   .header h1 {

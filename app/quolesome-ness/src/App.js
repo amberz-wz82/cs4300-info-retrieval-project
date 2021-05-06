@@ -15,6 +15,13 @@ function App() {
   const [searchResult, setResult] = useState([{}]);
   const [loading, setLoading] = useState(false);
 
+  window.onload = function() {
+    if(!window.location.hash) {
+      window.location = window.location + '#loaded';
+      window.location.reload();
+    }
+  }
+
   const handleSubmit = (searchInfo) => {
     //modify searchInfo here
     setInfo(searchInfo);
@@ -63,7 +70,7 @@ function App() {
       </a>
 
       <a href="https://quolesome-ness-ms4.herokuapp.com/">
-        <Button variant="outline-light" className="button version">
+        <Button variant="outline-light" className="button version2">
           Prototype 2
         </Button>
       </a>
