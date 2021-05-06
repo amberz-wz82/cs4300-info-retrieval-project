@@ -15,7 +15,7 @@ function ResultBar(props) {
     );
   }
   return (
-    <Container style={{ width: "80%" }}>
+    <Container className="output-query-container" style={{ width: "80%" }}>
       <Row>
         <Col xs={4}>
           <h3>Your Search:</h3>
