@@ -76,6 +76,7 @@
 .quote-card {
   background-color: #f4ffffbb !important;
   border-radius: 10px !important;
+  padding: 10px !important;
 }
 
 .footer {
@@ -109,6 +110,11 @@
 a {
   color: rgb(255, 255, 255) !important;
   text-decoration: none;
+}
+
+.output-query-container {
+  border: 2px solid #ffffff !important;
+  border-radius: 10px !important;
 }
 
 @media only screen and (max-width: 700px) {
