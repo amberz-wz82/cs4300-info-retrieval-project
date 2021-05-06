@@ -122,6 +122,18 @@ export default function QuoteCard(props) {
                         score) of the quotes more so the results are more{" "}
                         <i>comforting</i>. Otherwise we weigh the similarity
                         more so the results are more <i>relatable</i>.<br />
+                        <strong>normalized likes:</strong>
+                        {props.n_likes}
+                        <br />
+                        <strong>sentiment:</strong>
+                        {props.sentiment}
+                        <br />
+                        <strong>similarity:</strong>
+                        {props.similarity}
+                        <br />
+                        <strong>wholesomeness weight:</strong>
+                        {props.searchInfo.wholesome}
+                        <br />
                       </Popover.Content>
                     </Popover>
                   }

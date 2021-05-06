@@ -15,12 +15,12 @@ function App() {
   const [searchResult, setResult] = useState([{}]);
   const [loading, setLoading] = useState(false);
 
-  window.onload = function() {
-    if(!window.location.hash) {
-      window.location = window.location + '#loaded';
+  window.onload = function () {
+    if (!window.location.hash) {
+      window.location = window.location + "#loaded";
       window.location.reload();
     }
-  }
+  };
 
   const handleSubmit = (searchInfo) => {
     //modify searchInfo here
@@ -47,7 +47,8 @@ function App() {
         likes: number, 
         similarity: number,
         sentiment: number,
-        rank_score: number
+        rank_score: number,
+        normalized_like: number,
         DocIdx: number}]*/
         setOutput(true);
       });
