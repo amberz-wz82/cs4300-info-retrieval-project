@@ -42,8 +42,8 @@ def load_quotes():
         dfs.append(pd.read_csv(fpath, header=0, encoding='utf-8'))
     df = pd.concat(dfs).reset_index(drop=True)
     df = df[['quote', 'author', 'tags', 'likes', 'sentiment']]
-    df['tags'] = df['tags'].apply(eval)
-    df = df[df['tags'].notnull()]
+    df['tags'] = df['tags'].str.split(',')
+    #df = df[df['tags'].notnull()]
     max_df = df['likes'].max()
     min_df = df['likes'].min()
     '''
@@ -234,7 +234,7 @@ def get_lsi_sim(query, wholesome_weight, tags=[]):  #, wholesome_weight):
     dictionary = corpora.dictionary.Dictionary.load(
         './quotes_likes/quotes.dict')
     doc = [word for word in query.lower().split() if word not in stop_words]
-    # doc = query_expansion(doc)
+    #doc = query_expansion(doc)
     vec_bow = dictionary.doc2bow(doc)
     lsi = models.LsiModel.load('./quotes_likes/quotes.model')
     vec_lsi = lsi[vec_bow]  # convert the query to LSI space
