@@ -201,6 +201,7 @@ def query_expansion(query_arr):
                     if item.name()!=word and word != synonym.name() and len(synonym.lemma_names()) > 1:
                         expanded_query.append(item.name())
                         found = True
+                        break
             else:
                 break
     return expanded_query
