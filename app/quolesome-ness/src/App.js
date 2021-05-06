@@ -62,9 +62,17 @@ function App() {
         </Button>
       </a>
 
+      <a href="https://quolesome-ness-ms4.herokuapp.com/">
+        <Button variant="outline-light" className="button version">
+          Prototype 2
+        </Button>
+      </a>
+
       <div className="header">
         <h1>QUOLESOME-NESS</h1>
-        <a href="/"><Logo /></a>
+        <a href="/">
+          <Logo />
+        </a>
         <p>Feeling down? Let's find you some wholesome quotes!</p>
       </div>
       {isOutput ? (
