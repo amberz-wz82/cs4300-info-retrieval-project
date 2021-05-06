@@ -8,7 +8,7 @@ import sys
 from nltk.tokenize import TreebankWordTokenizer
 from collections import Counter
 from gensim import similarities, corpora, models, downloader
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords, wordnet
 from PyDictionary import PyDictionary
 from nltk import download
 import ssl
@@ -20,7 +20,7 @@ except AttributeError:
     pass
 else:
     ssl._create_default_https_context = _create_unverified_https_context
-download('stopwords')
+download('stopwords'), download('wordnet')
 # download('vader_lexicon')
 # model_t = downloader.load('glove-twitter-25')
 
@@ -194,9 +194,15 @@ def query_expansion(query_arr):
     '''
     expanded_query = query_arr.copy()
     for word in query_arr:
-        dictionary = PyDictionary(word)
-        for e in dictionary.getSynonyms()[0][word][0:2]:
-            expanded_query.append(e)
+        found = False
+        for synonym in wordnet.synsets(word):
+            if not found:
+                for item in synonym.lemmas():
+                    if item.name()!=word and word != synonym.name() and len(synonym.lemma_names()) > 1:
+                        expanded_query.append(item.name())
+                        found = True
+            else:
+                break
     return expanded_query
 
 

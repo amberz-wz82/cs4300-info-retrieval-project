@@ -25,5 +25,5 @@ def search_text():
         return get_lsi_sim(query, wholesome_weight)
     # tags.append(request.args.get("tags"))
     print(tags)
-    print(get_lsi_sim(query, wholesome_weight, tags))
+    #print(get_lsi_sim(query, wholesome_weight, tags))
     return get_lsi_sim(query, wholesome_weight, tags)
