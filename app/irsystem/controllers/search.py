@@ -240,7 +240,9 @@ def get_lsi_sim(query, wholesome_weight, tags=[]):  #, wholesome_weight):
         './quotes_likes/quotes.index')
     dictionary = corpora.dictionary.Dictionary.load(
         './quotes_likes/quotes.dict')
+    query = query.translate(str.maketrans('', '', string.punctuation))
     doc = [word for word in query.lower().split() if word not in stop_words]
+    print(doc)
     doc = query_expansion(doc)
     vec_bow = dictionary.doc2bow(doc)
     lsi = models.LsiModel.load('./quotes_likes/quotes.model')
