@@ -9,6 +9,7 @@ from nltk.tokenize import TreebankWordTokenizer
 from collections import Counter
 from gensim import similarities, corpora, models, downloader
 from nltk.corpus import stopwords
+from PyDictionary import PyDictionary
 from nltk import download
 import ssl
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -185,18 +186,18 @@ def get_categories():
     return load_tags_idx().keys()
 
 
-# def query_expansion(query_arr):
-#     '''
-#     Using Twitter Glove, generate two extra word embeddings 
-#     for each important word in the free text input for 
-#     query expansion.
-#     '''
-#     expanded_query = query_arr.copy()
-#     for word in query_arr:
-#         embeddings = model_t.most_similar(word)[0:2]
-#         for e in embeddings:
-#             expanded_query.append(e[0])
-#     return expanded_query
+def query_expansion(query_arr):
+    '''
+    Using Twitter Glove, generate two extra word embeddings 
+    for each important word in the free text input for 
+    query expansion.
+    '''
+    expanded_query = query_arr.copy()
+    for word in query_arr:
+        dictionary = PyDictionary(word)
+        for e in dictionary.getSynonyms()[0][word][0:2]:
+            expanded_query.append(e)
+    return expanded_query
 
 
 def rank_score(wholesome_weight, sim_scores):
@@ -233,7 +234,7 @@ def get_lsi_sim(query, wholesome_weight, tags=[]):  #, wholesome_weight):
     dictionary = corpora.dictionary.Dictionary.load(
         './quotes_likes/quotes.dict')
     doc = [word for word in query.lower().split() if word not in stop_words]
-    #doc = query_expansion(doc)
+    doc = query_expansion(doc)
     vec_bow = dictionary.doc2bow(doc)
     lsi = models.LsiModel.load('./quotes_likes/quotes.model')
     vec_lsi = lsi[vec_bow]  # convert the query to LSI space
@@ -275,11 +276,8 @@ def get_lsi_sim(query, wholesome_weight, tags=[]):  #, wholesome_weight):
     return df.to_json(orient="records")
 
 
-if __name__ == '__main__':
-    print(
-        json.dumps(json.JSONDecoder().decode(
-            get_lsi_sim("My friends and I are growing apart", 0.2, tags=['love'],)),
-                   indent=4))
+# if __name__ == '__main__':
+    #print(json.dumps(json.JSONDecoder().decode(        get_lsi_sim("My friends and I are growing apart", 0.2, tags=['love'],)),  indent=4))
     #print(json.dumps(json.JSONDecoder().decode(get_lsi_sim("My friends and I are growing apart", tags=['friendship', 'friends'])), indent=4))
     #print(json.dumps(json.JSONDecoder().decode(get_lsi_sim("I wish school was easier")), indent=4))
     #print(json.dumps(json.JSONDecoder().decode(get_category_matches(['inspirational','philosophy'])), indent=4))
