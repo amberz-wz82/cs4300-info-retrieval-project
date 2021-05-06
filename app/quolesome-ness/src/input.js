@@ -67,7 +67,7 @@ function Input(props) {
                     className="emoji"
                     onClick={() => {
                       setEmoji("🙁");
-                      setWholesome(0.3);
+                      setWholesome(0.2);
                     }}
                   >
                     🙁
@@ -78,7 +78,7 @@ function Input(props) {
                     className="emoji"
                     onClick={() => {
                       setEmoji("😢");
-                      setWholesome(0.5);
+                      setWholesome(0.3);
                     }}
                   >
                     😢
@@ -89,7 +89,7 @@ function Input(props) {
                     className="emoji"
                     onClick={() => {
                       setEmoji("😰");
-                      setWholesome(0.7);
+                      setWholesome(0.4);
                     }}
                   >
                     😰
@@ -100,7 +100,7 @@ function Input(props) {
                     className="emoji"
                     onClick={() => {
                       setEmoji("😭");
-                      setWholesome(0.9);
+                      setWholesome(0.5);
                     }}
                   >
                     😭

@@ -8,13 +8,13 @@ import ResultBar from "./Components/ResultBar";
 import Button from "react-bootstrap/Button";
 
 function Output(props) {
-  //TODO: fetch quotes
   const data = props.searchResult;
   const cards = [];
   for (var i = 0; i < data.length; i++) {
     cards.push(
       <QuoteCard
         key={i}
+        searchInfo={props.searchInfo}
         quote={data[i].quote}
         author={data[i].author}
         categories={data[i].tags}
@@ -22,7 +22,7 @@ function Output(props) {
         similarity={data[i].similarity}
         sentiment={data[i].sentiment}
         rank_score={data[i].rank_score}
-        idx={data[i].DocIdx}
+        n_likes={data[i].normalized_likes}
       />
     );
   }
