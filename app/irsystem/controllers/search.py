@@ -41,7 +41,7 @@ def load_quotes():
         if not os.path.isfile(fpath) or not fname.startswith('new_'): continue
         dfs.append(pd.read_csv(fpath, header=0, encoding='utf-8'))
     df = pd.concat(dfs).reset_index(drop=True)
-    df = df[['quote', 'author', 'tags', 'likes', 'sentiment']]
+    df = df[['quote', 'author', 'tags', 'likes', 'sentiment', 'normalized_likes']]
     df['tags'] = df['tags'].str.split(',')
     #df = df[df['tags'].notnull()]
     max_df = df['likes'].max()
@@ -50,7 +50,6 @@ def load_quotes():
     df.assign(Normalized_likes=
     [min_max_norm(max_df, min_df, likes) for likes in df['likes']])
     '''
-    print(df)
     return df
 
 
@@ -212,7 +211,7 @@ def rank_score(wholesome_weight, sim_scores):
     ranked = []
 
     for x in range(len(df.index)):
-        score = wholesome_weight * df.iloc[x, 4]  #normalized likes here
+        score = wholesome_weight * (df.iloc[x, 5]  + df.iloc[x,4]) / 2#normalized likes here
         score += (1 - wholesome_weight) * sim_scores[x]
         ranked.append(score)
     return ranked
